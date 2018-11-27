@@ -1,0 +1,151 @@
+import Viaje.*
+import socio.*
+describe "actividades de la mutual" {
+	
+	var viajePlaya1 = new ViajeDePlaya()
+	var viajePlaya2 = new ViajeDePlaya()
+	
+	var excursionCiudad = new ExcursionACiudad()
+	var excursionCiudad2 = new ExcursionACiudad()
+	var excursionTropical = new ExcursionACiudadTropical()
+	
+	var traking1 = new SalidaDeTraking()
+	var traking2 = new SalidaDeTraking()
+	
+	var roque = new SocioTranquilo()
+	var marta = new SocioCoherente()
+	var cesar = new SocioRelajado()
+	
+	var libro1 = new Libro()
+	var libro2 = new Libro()
+	var libro3 = new Libro()
+	
+	
+	
+	fixture {
+		
+		viajePlaya1.largoDePlaya(1000)
+		viajePlaya2.largoDePlaya(2000)
+		
+		excursionCiudad.cantDeAtracciones(4)
+		excursionTropical.cantDeAtracciones(4)
+		
+		traking1.kilometrosDeSenderos(100)
+		traking1.diasDeSol(130)
+		traking2.kilometrosDeSenderos(50)
+		traking2.diasDeSol(240)
+		
+		excursionCiudad2.cantDeAtracciones(5)
+		viajePlaya2.idiomas(#{"espaniol", "portugues"})
+		traking2.idiomas(#{"ingles", "ruso"})
+		
+		roque.actividadesQueRealizo(#{viajePlaya1, viajePlaya2})
+		roque.maximoDeActividades(2)
+		
+		marta.actividadesQueRealizo(#{viajePlaya1, viajePlaya2})
+		cesar.idiomasQueHabla(#{"espaniol"})
+		
+		libro1.autor("Borges")
+		libro2.autor("Borges")
+		libro3.autor("Borges")
+		
+		libro1.cantPaginas(550)
+		
+		tallerLiterario.libros(#{libro1, libro2, libro3})
+	}
+	
+	
+	test "viajePlaya" {
+		
+		assert.equals(2, viajePlaya1.diasQueLleva())
+		
+	}
+	
+	test "playa implicaEsfuerzo"{
+		
+		assert.notThat(viajePlaya1.implicaEsfuerzo())
+	}
+	
+	test "ciudad ej1" {
+		
+		
+		assert.equals(2, excursionCiudad.diasQueLleva())
+		assert.notThat(excursionCiudad.implicaEsfuerzo())
+		assert.notThat( excursionCiudad.sirveBroncearse())
+	
+	}
+	
+	test "ciudad tropi" {
+		
+		
+		assert.equals(3, excursionTropical.diasQueLleva())
+		assert.notThat(excursionTropical.implicaEsfuerzo())
+		assert.that(excursionTropical.sirveBroncearse())
+	
+	}
+	
+	test "traking ej 1"{
+		
+		assert.equals(2, traking1.diasQueLleva())
+		assert.that(traking1.implicaEsfuerzo())
+		assert.notThat( traking1.sirveBroncearse())
+			
+	}
+	
+		test "traking ej 2"{
+		
+		assert.equals(1, traking2.diasQueLleva())
+		assert.notThat(traking2.implicaEsfuerzo())
+		assert.that(traking2.sirveBroncearse())
+			
+	}
+	
+		test "viaje interesante "{
+			
+			assert.that(excursionCiudad2.esViajeInteresante())
+			assert.that(traking2.esViajeInteresante())
+			assert.that(viajePlaya2.esViajeInteresante())
+			
+		}
+	
+		test "roque"{
+			
+			assert.that(roque.esAdoradorDeSol())
+			assert.equals(#{viajePlaya2}, roque.actividadesForzadas())
+			
+			
+		}
+		test "roque gimnasia da error" {
+			
+			assert.throwsExceptionWithMessage("No puede realizar mas actividades",  {roque.registrarActividad(clasesDeGimnasia)})
+			
+		}
+		
+		test "le atrae" {
+			
+			assert.notThat(roque.actividadLeAtrae(viajePlaya1))
+			assert.that(marta.actividadLeAtrae(viajePlaya1))
+			assert.that(cesar.actividadLeAtrae(viajePlaya2))
+			
+			
+		}
+		
+		test "es recomendada" {
+			
+			assert.that(viajePlaya2.actividadRecomendable(cesar))
+		}
+	
+		test "taller Literario" {
+			
+			assert.that(tallerLiterario.sonDelMismoAutor())
+			
+			
+		}
+		
+		test "implica esfuerzo"{
+			
+			assert.that(tallerLiterario.implicaEsfuerzo())
+		}
+	
+	
+}
